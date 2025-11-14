@@ -1,0 +1,12 @@
+# Mark venv folder as vendored code (won't count toward language stats)
+backend/vev/** linguist-vendored
+
+# Mark node_modules as vendored
+node_modules/** linguist-vendored
+
+# Mark common dependencies
+*/site-packages/** linguist-vendored
+
+# Define your actual source languages
+frontend/src/** linguist-language=JavaScript
+backend/*.py linguist-language=Python
