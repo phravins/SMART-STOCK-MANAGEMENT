@@ -1,0 +1,51 @@
+services:
+  # Backend API Service
+  - type: web
+    name: smartstock-api
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: cd backend && pip install -r requirements.txt
+    startCommand: cd backend && uvicorn server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: MONGO_URL
+        sync: false
+      - key: DB_NAME
+        value: smartstock
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_WHATSAPP_FROM
+        value: whatsapp:+14155238886
+      - key: TWILIO_WHATSAPP_TO
+        sync: false
+      - key: MAIL_SERVER
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: 587
+      - key: MAIL_USE_TLS
+        value: True
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: MAIL_DEFAULT_SENDER
+        sync: false
+      - key: ALERT_EMAIL_TO
+        sync: false
+
+  # Frontend Service
+  - type: web
+    name: smartstock-frontend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd frontend && yarn install && yarn build
+    staticPublishPath: ./frontend/build
+    envVars:
+      - key: REACT_APP_BACKEND_URL
+        fromService:
+          type: web
+          name: smartstock-api
+          envVarKey: RENDER_EXTERNAL_URL
